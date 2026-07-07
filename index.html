@@ -130,14 +130,28 @@
     opacity: 0;
     transform: scaleY(0.05);
     transform-origin: center;
+    filter: drop-shadow(0 0 0px rgba(255,255,255,0)) drop-shadow(0 0 0px rgba(240,230,190,0));
     animation:
-      paperUnfurl 1s cubic-bezier(.22,1,.36,1) 2.3s forwards,
-      neonPulse 3.2s ease-in-out 3.3s infinite;
+      paperUnfurl 1.6s cubic-bezier(.22,1,.36,1) 2.3s forwards,
+      logoGlowIn 1.8s ease-out 3.9s forwards,
+      neonPulse 3.2s ease-in-out 5.7s infinite;
   }
   @keyframes paperUnfurl{
     0%{ transform: scaleY(0.05); opacity: 0; }
-    55%{ transform: scaleY(1.08); opacity: 1; }
+    55%{ transform: scaleY(1.08); opacity: 0.55; }
     100%{ transform: scaleY(1); opacity: 1; }
+  }
+  @keyframes logoGlowIn{
+    0%{
+      filter:
+        drop-shadow(0 0 0px rgba(255,255,255,0))
+        drop-shadow(0 0 0px rgba(240,230,190,0));
+    }
+    100%{
+      filter:
+        drop-shadow(0 0 3px rgba(255,255,255,0.8))
+        drop-shadow(0 0 11px rgba(240,230,190,0.45));
+    }
   }
 
   .landing-tagline{
@@ -177,7 +191,14 @@
   }
 
   @media (prefers-reduced-motion: reduce){
-    .logo-mark.landing-logo-mark{ animation: none !important; opacity: 1; transform: none; }
+    .logo-mark.landing-logo-mark{
+      animation: none !important;
+      opacity: 1;
+      transform: none;
+      filter:
+        drop-shadow(0 0 3px rgba(255,255,255,0.8))
+        drop-shadow(0 0 11px rgba(240,230,190,0.45));
+    }
     .landing-tagline.typing::after{ animation: none !important; }
     .landing-btn{ transition: none !important; }
     #landing{ transition: none !important; }
@@ -675,7 +696,8 @@
 
   .news-list{
     list-style: none;
-    margin: 14px 0 0;
+    margin: 0;
+    width: 100%;
     padding-top: 14px;
     border-top: 1px solid rgba(255,255,255,0.1);
     display: flex;
@@ -849,10 +871,9 @@
 
         <div class="actions">
           <button class="news-toggle" id="newsToggle" aria-expanded="false">관련 뉴스 보기 ▾</button>
+          <ul class="news-list" id="newsList" hidden></ul>
           <button class="redraw-btn" id="redrawBtn">↻ 다시 뽑기</button>
         </div>
-
-        <ul class="news-list" id="newsList" hidden></ul>
 
         <div class="seal" id="stamp" aria-hidden="true">占</div>
       </section>
@@ -1469,8 +1490,19 @@
     }, 260);
   }
 
-  function resetToInvite(){
+  function scrollToTop(){
     window.scrollTo({ top: 0, behavior: "smooth" });
+    // 앱이 Streamlit의 iframe 안에서 렌더링될 때는 내부 문서 스크롤이
+    // 0이어도 바깥 페이지가 스크롤된 채로 남아있을 수 있어 부모도 같이 올림.
+    try{
+      if(window.parent && window.parent !== window){
+        window.parent.scrollTo({ top: 0, behavior: "smooth" });
+      }
+    }catch(e){ /* cross-origin parent: 접근 불가하면 무시 */ }
+  }
+
+  function resetToInvite(){
+    scrollToTop();
     dosaChar.classList.remove("pop");
     drawBtn.disabled = false;
     if(!slip.hidden){
@@ -1559,7 +1591,7 @@
       landingBtn.classList.add("show");
       return;
     }
-    window.setTimeout(typeTagline, 3400);
+    window.setTimeout(typeTagline, 3900);
   }
 
   landingBtn.addEventListener("click", function(){
