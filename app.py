@@ -41,7 +41,17 @@ MIME_MAP = {
 }
 
 
-def load_self_contained_html() -> str:
+def _content_version() -> str:
+    """index.html과 images/*의 mtime을 묶어 캐시 무효화 키로 사용.
+    파일이 바뀌면 이 값이 바뀌어 아래 캐시가 자동으로 새로 계산됨."""
+    stats = [HTML_PATH.stat().st_mtime_ns if HTML_PATH.exists() else 0]
+    if IMAGES_DIR.exists():
+        stats += sorted(p.stat().st_mtime_ns for p in IMAGES_DIR.iterdir())
+    return str(hash(tuple(stats)))
+
+
+@st.cache_resource(show_spinner=False)
+def load_self_contained_html(version: str) -> str:
     """index.html을 읽어서 images/*.png 같은 상대경로 이미지를
     base64 data URI로 치환한 완전한(self-contained) HTML 문자열을 반환.
     st.iframe은 HTML 문자열을 iframe으로 렌더링하기 때문에
@@ -71,7 +81,7 @@ def load_self_contained_html() -> str:
     return html
 
 
-html_content = load_self_contained_html()
+html_content = load_self_contained_html(_content_version())
 
 # 카드 UI + 랜딩 애니메이션 + 탭 전환 등을 감안해 넉넉한 높이로 렌더링.
 # 필요하면 height 값을 조절하세요.
