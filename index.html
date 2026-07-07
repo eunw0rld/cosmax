@@ -822,7 +822,7 @@
       <section class="slip glass" id="slip" aria-live="polite" hidden>
         <div class="slip-top">
           <time class="slip-date" id="slipDate"></time>
-          <button class="card-toggle-switch" id="cardToggle" role="switch" aria-checked="false" aria-label="타로 카드 보기">
+          <button class="card-toggle-switch" id="cardToggle" role="switch" aria-checked="true" aria-label="타로 카드 보기">
             <span class="switch-label">카드 보기</span>
             <span class="switch-track" aria-hidden="true"><span class="switch-thumb"></span></span>
           </button>
@@ -830,7 +830,7 @@
 
         <p class="slip-heading">오늘의 점괘</p>
 
-        <div class="tarot-card" id="tarotCard" hidden>
+        <div class="tarot-card" id="tarotCard">
           <div class="tarot-frame">
             <div class="tarot-fallback" aria-hidden="true">✦</div>
             <img class="tarot-img" id="tarotImg" alt="" aria-hidden="true" />
@@ -1388,9 +1388,29 @@
     }
   }
 
+  var IMAGES_WITH_ART = new Set([
+    "images/01-beauty-tone-up-sunscreen.png",
+    "images/06-beauty-hair-care-shampoo.png",
+    "images/10-beauty-vegan-mascara.png",
+    "images/12-ingredient-microbiome-ingredient.png",
+    "images/13-ingredient-pdrn.png",
+    "images/15-ingredient-vegan-collagen.png",
+    "images/21-economy-odm-manufacturing-boom.png",
+    "images/22-economy-refill-station-expansion.png",
+    "images/26-economy-mergers-and-acquisitions.png",
+    "images/31-global-k-beauty-cross-border-sales.png",
+    "images/33-global-us-clean-beauty-regulation.png",
+    "images/40-global-halal-certified-cosmetics.png",
+    "images/44-marketing-ai-marketing.png",
+    "images/45-marketing-influencer-collaboration.png",
+    "images/50-marketing-brand-storytelling.png"
+  ]);
+
   function pickEntry(){
     var list = DATA[currentCategory];
-    return list[Math.floor(Math.random() * list.length)];
+    var withArt = list.filter(function(entry){ return IMAGES_WITH_ART.has(entry.tarotImage); });
+    var pool = withArt.length ? withArt : list;
+    return pool[Math.floor(Math.random() * pool.length)];
   }
 
   function populate(entry){
@@ -1410,9 +1430,9 @@
     newsToggle.textContent = "관련 뉴스 보기 ▾";
     newsToggle.setAttribute("aria-expanded", "false");
 
-    tarotCard.hidden = true;
+    tarotCard.hidden = false;
     tarotCard.classList.remove("flip-in", "flip-out");
-    cardToggle.setAttribute("aria-checked", "false");
+    cardToggle.setAttribute("aria-checked", "true");
   }
 
   function playStamp(){
