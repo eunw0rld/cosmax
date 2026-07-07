@@ -458,17 +458,13 @@
     font-variant-numeric: tabular-nums;
     letter-spacing: 0.02em;
   }
-  .slip-eyebrow{
-    font-size: 12px;
-    font-weight: 800;
-    letter-spacing: 0.1em;
-    color: var(--pink-soft);
-    text-transform: uppercase;
-  }
-  .slip-top-right{
-    display: flex;
-    align-items: center;
-    gap: 8px;
+  .slip-heading{
+    margin: 0 0 16px;
+    font-size: 13px;
+    color: var(--text-soft);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.02em;
+    text-align: center;
   }
   .card-toggle-switch{
     display: inline-flex;
@@ -765,7 +761,7 @@
   @media (max-width: 480px){
     .tagline{ font-size: 14px; }
     .slip-date{ font-size: 14px; }
-    .slip-eyebrow{ font-size: 12.5px; }
+    .slip-heading{ font-size: 14px; }
     .metric{ font-size: 13px; }
     .news-toggle, .redraw-btn{ font-size: 13.5px; }
     .news-list li{ font-size: 14px; }
@@ -826,14 +822,13 @@
       <section class="slip glass" id="slip" aria-live="polite" hidden>
         <div class="slip-top">
           <time class="slip-date" id="slipDate"></time>
-          <div class="slip-top-right">
-            <span class="slip-eyebrow">오늘의 점괘</span>
-            <button class="card-toggle-switch" id="cardToggle" role="switch" aria-checked="false" aria-label="타로 카드 보기">
-              <span class="switch-label">카드 보기</span>
-              <span class="switch-track" aria-hidden="true"><span class="switch-thumb"></span></span>
-            </button>
-          </div>
+          <button class="card-toggle-switch" id="cardToggle" role="switch" aria-checked="false" aria-label="타로 카드 보기">
+            <span class="switch-label">카드 보기</span>
+            <span class="switch-track" aria-hidden="true"><span class="switch-thumb"></span></span>
+          </button>
         </div>
+
+        <p class="slip-heading">오늘의 점괘</p>
 
         <div class="tarot-card" id="tarotCard" hidden>
           <div class="tarot-frame">
