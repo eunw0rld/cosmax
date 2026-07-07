@@ -466,6 +466,12 @@
     text-transform: uppercase;
   }
 
+  .card-toggle-row{
+    display: flex;
+    justify-content: center;
+    margin-bottom: 14px;
+  }
+
   .tarot-card{
     width: min(180px, 46vw);
     aspect-ratio: 2 / 3;
@@ -765,7 +771,11 @@
           <span class="slip-eyebrow">오늘의 점괘</span>
         </div>
 
-        <div class="tarot-card" id="tarotCard">
+        <div class="card-toggle-row">
+          <button class="news-toggle" id="cardToggle" aria-expanded="false">카드 보기 ▾</button>
+        </div>
+
+        <div class="tarot-card" id="tarotCard" hidden>
           <div class="tarot-frame">
             <div class="tarot-fallback" aria-hidden="true">✦</div>
             <img class="tarot-img" id="tarotImg" alt="" aria-hidden="true" />
@@ -1308,6 +1318,7 @@
   var tabs = document.querySelectorAll(".tab");
   var tarotCard = document.getElementById("tarotCard");
   var tarotImg = document.getElementById("tarotImg");
+  var cardToggle = document.getElementById("cardToggle");
 
   tarotImg.addEventListener("error", function(){
     tarotImg.classList.add("img-error");
@@ -1343,6 +1354,11 @@
     newsList.hidden = true;
     newsToggle.textContent = "관련 뉴스 보기 ▾";
     newsToggle.setAttribute("aria-expanded", "false");
+
+    tarotCard.hidden = true;
+    tarotCard.classList.remove("flip-in", "flip-out");
+    cardToggle.textContent = "카드 보기 ▾";
+    cardToggle.setAttribute("aria-expanded", "false");
   }
 
   function playStamp(){
@@ -1409,6 +1425,26 @@
     newsList.hidden = !willOpen;
     newsToggle.textContent = willOpen ? "관련 뉴스 닫기 ▴" : "관련 뉴스 보기 ▾";
     newsToggle.setAttribute("aria-expanded", willOpen ? "true" : "false");
+  });
+
+  cardToggle.addEventListener("click", function(){
+    var willOpen = tarotCard.hidden;
+    if(willOpen){
+      tarotCard.hidden = false;
+      tarotCard.classList.remove("flip-in", "flip-out");
+      void tarotCard.offsetWidth;
+      tarotCard.classList.add("flip-in");
+    }else{
+      tarotCard.classList.remove("flip-in");
+      void tarotCard.offsetWidth;
+      tarotCard.classList.add("flip-out");
+      window.setTimeout(function(){
+        tarotCard.hidden = true;
+        tarotCard.classList.remove("flip-out");
+      }, 260);
+    }
+    cardToggle.textContent = willOpen ? "카드 숨기기 ▴" : "카드 보기 ▾";
+    cardToggle.setAttribute("aria-expanded", willOpen ? "true" : "false");
   });
 
   tabs.forEach(function(tab){
