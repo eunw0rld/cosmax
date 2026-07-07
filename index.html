@@ -1493,10 +1493,34 @@
   function scrollToTop(){
     window.scrollTo({ top: 0, behavior: "smooth" });
     // 앱이 Streamlit의 iframe 안에서 렌더링될 때는 내부 문서 스크롤이
-    // 0이어도 바깥 페이지가 스크롤된 채로 남아있을 수 있어 부모도 같이 올림.
+    // 0이어도 바깥 페이지(혹은 Streamlit이 자체적으로 스크롤시키는
+    // 내부 컨테이너)가 스크롤된 채로 남아있을 수 있어 같이 올림.
     try{
       if(window.parent && window.parent !== window){
-        window.parent.scrollTo({ top: 0, behavior: "smooth" });
+        var pw = window.parent;
+        pw.scrollTo({ top: 0, behavior: "smooth" });
+        if(pw.document && pw.document.documentElement){
+          pw.document.documentElement.scrollTop = 0;
+        }
+        if(pw.document && pw.document.body){
+          pw.document.body.scrollTop = 0;
+        }
+        // Streamlit 버전에 따라 실제 스크롤이 일어나는 내부 컨테이너가
+        // window/body가 아니라 아래 중 하나일 수 있어 전부 시도.
+        [
+          '[data-testid="stMain"]',
+          '[data-testid="stAppViewContainer"]',
+          'section.main',
+          '.main'
+        ].forEach(function(sel){
+          var el = pw.document.querySelector(sel);
+          if(!el) return;
+          if(typeof el.scrollTo === "function"){
+            el.scrollTo({ top: 0, behavior: "smooth" });
+          }else{
+            el.scrollTop = 0;
+          }
+        });
       }
     }catch(e){ /* cross-origin parent: 접근 불가하면 무시 */ }
   }
