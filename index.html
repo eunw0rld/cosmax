@@ -465,12 +465,31 @@
     color: var(--pink-soft);
     text-transform: uppercase;
   }
-
-  .card-toggle-row{
+  .slip-top-right{
     display: flex;
-    justify-content: center;
-    margin-bottom: 14px;
+    align-items: center;
+    gap: 8px;
   }
+  .card-toggle-icon{
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    appearance: none;
+    cursor: pointer;
+    font-family: var(--font);
+    font-weight: 700;
+    font-size: 10.5px;
+    letter-spacing: 0.01em;
+    padding: 5px 9px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.07);
+    border: 1px solid var(--glass-border);
+    color: var(--text-soft);
+    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+  }
+  .card-toggle-icon:hover{ background: rgba(255,255,255,0.12); }
+  .card-toggle-icon[aria-expanded="true"]{ color: var(--pink-soft); border-color: rgba(255,93,168,0.4); }
+  .card-toggle-icon:focus-visible{ outline: 2px solid var(--pink-soft); outline-offset: 2px; }
 
   .tarot-card{
     width: min(180px, 46vw);
@@ -589,13 +608,13 @@
 
   .actions{
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-    flex-wrap: wrap;
-    gap: 14px;
+    gap: 22px;
     margin-top: 14px;
   }
-  .news-toggle, .redraw-btn{
+  .news-toggle{
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -611,12 +630,28 @@
     border: 1px solid var(--glass-border);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
+    color: var(--pink-soft);
     transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.15s ease, color 0.2s ease;
   }
-  .news-toggle{ color: var(--pink-soft); }
-  .redraw-btn{ color: var(--text-soft); font-weight: 600; }
   .news-toggle:hover{ background: rgba(255,255,255,0.12); transform: translateY(-1px); }
-  .redraw-btn:hover{ background: rgba(255,255,255,0.1); color: var(--purple-soft); transform: translateY(-1px); }
+  .redraw-btn{
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    appearance: none;
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 4px 2px;
+    font-family: var(--font);
+    font-weight: 600;
+    font-size: 13px;
+    color: var(--text-soft);
+    text-decoration: underline;
+    text-decoration-color: transparent;
+    transition: color 0.2s ease, text-decoration-color 0.2s ease;
+  }
+  .redraw-btn:hover{ color: var(--purple-soft); text-decoration-color: currentColor; }
   .news-toggle:focus-visible, .redraw-btn:focus-visible{ outline: 2px solid var(--pink-soft); outline-offset: 2px; }
 
   .news-list{
@@ -768,11 +803,10 @@
       <section class="slip glass" id="slip" aria-live="polite" hidden>
         <div class="slip-top">
           <time class="slip-date" id="slipDate"></time>
-          <span class="slip-eyebrow">오늘의 점괘</span>
-        </div>
-
-        <div class="card-toggle-row">
-          <button class="news-toggle" id="cardToggle" aria-expanded="false">카드 보기 ▾</button>
+          <div class="slip-top-right">
+            <span class="slip-eyebrow">오늘의 점괘</span>
+            <button class="card-toggle-icon" id="cardToggle" aria-expanded="false" aria-label="타로 카드 보기">카드 보기</button>
+          </div>
         </div>
 
         <div class="tarot-card" id="tarotCard" hidden>
@@ -1357,7 +1391,7 @@
 
     tarotCard.hidden = true;
     tarotCard.classList.remove("flip-in", "flip-out");
-    cardToggle.textContent = "카드 보기 ▾";
+    cardToggle.textContent = "카드 보기";
     cardToggle.setAttribute("aria-expanded", "false");
   }
 
@@ -1396,6 +1430,7 @@
   }
 
   function resetToInvite(){
+    window.scrollTo({ top: 0, behavior: "smooth" });
     dosaChar.classList.remove("pop");
     drawBtn.disabled = false;
     if(!slip.hidden){
@@ -1443,7 +1478,7 @@
         tarotCard.classList.remove("flip-out");
       }, 260);
     }
-    cardToggle.textContent = willOpen ? "카드 숨기기 ▴" : "카드 보기 ▾";
+    cardToggle.textContent = willOpen ? "카드 숨기기" : "카드 보기";
     cardToggle.setAttribute("aria-expanded", willOpen ? "true" : "false");
   });
 
