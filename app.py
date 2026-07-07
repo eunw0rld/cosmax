@@ -3,7 +3,6 @@ import re
 from pathlib import Path
 
 import streamlit as st
-import streamlit.components.v1 as components
 
 # ────────────────────────────────────────────────────────────
 # 기본 설정
@@ -46,7 +45,7 @@ MIME_MAP = {
 def load_self_contained_html() -> str:
     """index.html을 읽어서 images/*.png 같은 상대경로 이미지를
     base64 data URI로 치환한 완전한(self-contained) HTML 문자열을 반환.
-    components.html은 iframe(srcdoc)로 렌더링하기 때문에
+    st.iframe은 HTML 문자열을 iframe으로 렌더링하기 때문에
     상대경로 리소스를 그대로 두면 로드되지 않음."""
     if not HTML_PATH.exists():
         return (
@@ -77,4 +76,4 @@ html_content = load_self_contained_html()
 
 # 카드 UI + 랜딩 애니메이션 + 탭 전환 등을 감안해 넉넉한 높이로 렌더링.
 # 필요하면 height 값을 조절하세요.
-components.html(html_content, height=1500, scrolling=True)
+st.iframe(html_content, height=1500)
