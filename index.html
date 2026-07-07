@@ -470,26 +470,50 @@
     align-items: center;
     gap: 8px;
   }
-  .card-toggle-icon{
+  .card-toggle-switch{
     display: inline-flex;
     align-items: center;
-    justify-content: center;
+    gap: 6px;
     appearance: none;
     cursor: pointer;
+    background: none;
+    border: none;
+    padding: 2px;
     font-family: var(--font);
     font-weight: 700;
     font-size: 10.5px;
     letter-spacing: 0.01em;
-    padding: 5px 9px;
-    border-radius: 999px;
-    background: rgba(255,255,255,0.07);
-    border: 1px solid var(--glass-border);
     color: var(--text-soft);
-    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+    transition: color 0.2s ease;
   }
-  .card-toggle-icon:hover{ background: rgba(255,255,255,0.12); }
-  .card-toggle-icon[aria-expanded="true"]{ color: var(--pink-soft); border-color: rgba(255,93,168,0.4); }
-  .card-toggle-icon:focus-visible{ outline: 2px solid var(--pink-soft); outline-offset: 2px; }
+  .card-toggle-switch .switch-track{
+    position: relative;
+    width: 30px;
+    height: 17px;
+    flex-shrink: 0;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.16);
+    border: 1px solid var(--glass-border);
+    transition: background 0.25s ease, border-color 0.25s ease;
+  }
+  .card-toggle-switch .switch-thumb{
+    position: absolute;
+    top: 1px;
+    left: 1px;
+    width: 13px;
+    height: 13px;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.35);
+    transition: transform 0.25s cubic-bezier(.22,1,.36,1);
+  }
+  .card-toggle-switch[aria-checked="true"]{ color: var(--pink-soft); }
+  .card-toggle-switch[aria-checked="true"] .switch-track{
+    background: linear-gradient(135deg, var(--pink) 0%, var(--purple) 100%);
+    border-color: transparent;
+  }
+  .card-toggle-switch[aria-checked="true"] .switch-thumb{ transform: translateX(13px); }
+  .card-toggle-switch:focus-visible{ outline: 2px solid var(--pink-soft); outline-offset: 2px; border-radius: 999px; }
 
   .tarot-card{
     width: min(180px, 46vw);
@@ -564,7 +588,6 @@
     letter-spacing: 0.01em;
     text-align: center;
   }
-  .keyword-label{ color: var(--text-soft); }
   .keyword{
     font-weight: 800;
     font-size: 14px;
@@ -805,7 +828,10 @@
           <time class="slip-date" id="slipDate"></time>
           <div class="slip-top-right">
             <span class="slip-eyebrow">오늘의 점괘</span>
-            <button class="card-toggle-icon" id="cardToggle" aria-expanded="false" aria-label="타로 카드 보기">카드 보기</button>
+            <button class="card-toggle-switch" id="cardToggle" role="switch" aria-checked="false" aria-label="타로 카드 보기">
+              <span class="switch-label">카드 보기</span>
+              <span class="switch-track" aria-hidden="true"><span class="switch-thumb"></span></span>
+            </button>
           </div>
         </div>
 
@@ -817,7 +843,7 @@
         </div>
 
         <p class="keyword-line">
-          <span class="keyword-label">오늘의 화제 키워드</span> · <span class="keyword" id="keyword"></span>
+          <span class="keyword" id="keyword"></span>
         </p>
 
         <p class="fortune" id="fortune"></p>
@@ -1391,8 +1417,7 @@
 
     tarotCard.hidden = true;
     tarotCard.classList.remove("flip-in", "flip-out");
-    cardToggle.textContent = "카드 보기";
-    cardToggle.setAttribute("aria-expanded", "false");
+    cardToggle.setAttribute("aria-checked", "false");
   }
 
   function playStamp(){
@@ -1478,8 +1503,7 @@
         tarotCard.classList.remove("flip-out");
       }, 260);
     }
-    cardToggle.textContent = willOpen ? "카드 숨기기" : "카드 보기";
-    cardToggle.setAttribute("aria-expanded", willOpen ? "true" : "false");
+    cardToggle.setAttribute("aria-checked", willOpen ? "true" : "false");
   });
 
   tabs.forEach(function(tab){

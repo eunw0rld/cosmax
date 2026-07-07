@@ -41,7 +41,6 @@ MIME_MAP = {
 }
 
 
-@st.cache_resource(show_spinner=False)
 def load_self_contained_html() -> str:
     """index.html을 읽어서 images/*.png 같은 상대경로 이미지를
     base64 data URI로 치환한 완전한(self-contained) HTML 문자열을 반환.
