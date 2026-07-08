@@ -132,9 +132,9 @@
     transform-origin: center;
     filter: drop-shadow(0 0 0px rgba(255,255,255,0)) drop-shadow(0 0 0px rgba(240,230,190,0));
     animation:
-      paperUnfurl 1.6s cubic-bezier(.22,1,.36,1) 2.3s forwards,
-      logoGlowIn 1.8s ease-out 3.9s forwards,
-      neonPulse 3.2s ease-in-out 5.7s infinite;
+      paperUnfurl 0.7s cubic-bezier(.22,1,.36,1) 0.3s forwards,
+      logoGlowIn 0.8s ease-out 1s forwards,
+      neonPulse 3.2s ease-in-out 1.8s infinite;
   }
   @keyframes paperUnfurl{
     0%{ transform: scaleY(0.05); opacity: 0; }
@@ -1615,7 +1615,7 @@
       landingBtn.classList.add("show");
       return;
     }
-    window.setTimeout(typeTagline, 3900);
+    window.setTimeout(typeTagline, 1000);
   }
 
   landingBtn.addEventListener("click", function(){
